@@ -63,11 +63,38 @@ developing your own process.
 - Add a new toy when the toy form is submitted
 
   - How I debugged:
+    <br> When the new toy form is submitted, the following error occurs:
+    ```sh
+    500 Internal Server Error
+    NameError (uninitialized constant ToysController::Toys):
+    
+    app/controllers/toys_controller.rb:10:in `create'
+    ```
+    There was a typo in the controller #create action. Hence, I corrected the ```Toy.create``` typo.
 
 - Update the number of likes for a toy
 
   - How I debugged:
+    <br> When the like button is clicked, the following error occurs:
+    ```sh
+      Unpermitted parameter: :id
+      Completed 204 No Content
+    ```
+    On checking the browser console, the following error occurs:
+    ```sh
+      Uncaught (in promise) SyntaxError: Unexpected end of JSON input
+    ```
+    Hence, I checked the `#update` controller action and added a render response as follows: ```render json: toy, status: :accepted```.
 
 - Donate a toy to Goodwill (and delete it from our database)
 
   - How I debugged:
+    <br> When the Donate to GoodWill button is clicked, the following error occurs in the server logs:
+    ```sh
+      ActionController::RoutingError (No route matches [DELETE] "/toys/1")
+    ```
+    The `#destroy` controller action was already defined in the [ToysController](app/controllers/toys_controller.rb), but there was no route for the action.<br>
+    Hence, I added `:destroy` to the `resources` method in [routes.rb file](config/routes.rb).
+    ```sh
+        resources :toys, only: [:index, :create, :update, :destroy]
+    ```
